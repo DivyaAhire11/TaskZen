@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken"
 import user from "../models/user.js";
 import bcrypt from "bcrypt"
-import { config } from "dotenv"
-config();
+// import { config } from "dotenv"
+// config();
 
 const signup = async (req, res) => {
     try {
@@ -18,17 +18,17 @@ const signup = async (req, res) => {
             }
         })
 
-        //if user has been already exits then
-        let alreadyExituser = await user.findOne({ email });
-
-        if (alreadyExituser) {
+        //if user has been already present then
+        let alreadyExistuser = await user.findOne({ email });
+        if (alreadyExistuser) {
             return res.json({
-                message: "email already exit please login"
+                message: "email already exist please login"
             })
         }
 
         // if user not already exits then
         let hashPassword = await bcrypt.hash(password, 10);
+        console.log(hashPassword);
 
         let createUser = await user.create({
             name,
@@ -49,12 +49,12 @@ const signup = async (req, res) => {
             })
         }
     } catch (error) {
-        res.json({
-            message: error.message
-
+        return res.json({
+            msg: error.message
         })
     }
 }
+
 const login = async (req, res) => {
     try {
         let { email, password } = req.body
@@ -62,19 +62,20 @@ const login = async (req, res) => {
         requiredfield.forEach((field) => {
             if (!req.body[field]) {
                 return res.json({
-                    message: `${field} is required`
+                    message: `${field} is required to login`
                 })
             }
         })
 
         let checkUserExit = await user.findOne({ email })
+        console.log(checkUserExit)
         if (!checkUserExit) {
             res.json({
                 message: "email does not exit please signup"
             })
         }
         let isPasswordMatch = await bcrypt.compare(password, checkUserExit?.password)
-
+        console.log(isPasswordMatch)
         if (!isPasswordMatch) {
             return res.json({
                 message: "invalid credentials"
@@ -87,7 +88,7 @@ const login = async (req, res) => {
             _id: checkUserExit._id
         }
 
-       //jwt = json web token
+        //jwt = json web token
         let token = await jwt.sign(sendData, process.env.JWT_SECRET, { expiresIn: "1h" });
         res.cookie("token", token);
 
@@ -102,4 +103,5 @@ const login = async (req, res) => {
         })
     }
 }
+
 export { signup, login }

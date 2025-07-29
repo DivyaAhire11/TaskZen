@@ -9,13 +9,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
 // Controllers
-import {healthControler} from "../Server/controller/generalController.js"
-import { signup,login } from "./controller/userSignUpController.js";
-
+import { healthControler } from "./controller/generalController.js"
+import { signup, login } from "./controller/loginSignUpController.js";
 
 app.post("/signup", signup);
-app.post("/login",login)
-app.get("/health",healthControler );
+app.post("/login", login);
+app.get("/health", healthControler);
 
 
 app.listen(PORT, () => {

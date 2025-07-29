@@ -1,10 +1,10 @@
 
-const healthControler = (req,res)=>{
+const healthControler = (req, res) => {
     res.json({
-        message : "server is running Healthy"
+        message: "server is running Healthy"
     })
 }
 
 
 
-export {healthControler}
+export { healthControler }
