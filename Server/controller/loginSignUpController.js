@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken"
-import user from "../models/user.js";
+import user from "../models/user.model.js";
 import bcrypt from "bcrypt"
-// import { config } from "dotenv"
-// config();
+import { config } from "dotenv"
+config();
 
 const signup = async (req, res) => {
     try {
@@ -13,24 +13,24 @@ const signup = async (req, res) => {
         requiredData.forEach((data) => {   // check all data is Entered
             if (!req.body[data]) {
                 res.json({
+                    data: null,
                     message: `${data} is required`
                 })
             }
         })
 
         //if user has been already present then
-        let alreadyExistuser = await user.findOne({ email });
-        if (alreadyExistuser) {
+        let isUserExist = await User.findOne({ email });
+        if (isUserExist) {
             return res.json({
+                data: null,
                 message: "email already exist please login"
             })
         }
 
         // if user not already exits then
         let hashPassword = await bcrypt.hash(password, 10);
-        console.log(hashPassword);
-
-        let createUser = await user.create({
+        let createUser = await User.create({
             name,
             email,
             password: hashPassword
@@ -38,19 +38,20 @@ const signup = async (req, res) => {
 
         if (createUser) {
             createUser = await createUser.save();
-
             return res.json({
                 message: "user create successfully",
                 data: createUser
             })
         } else {
             return res.json({
+                data: null,
                 message: "something went wrong",
             })
         }
     } catch (error) {
         return res.json({
-            msg: error.message
+            data: null,
+            message: error.message
         })
     }
 }
@@ -67,15 +68,15 @@ const login = async (req, res) => {
             }
         })
 
-        let checkUserExit = await user.findOne({ email })
-        console.log(checkUserExit)
-        if (!checkUserExit) {
+        let isUserExist = await user.findOne({ email })
+
+        if (!isUserExist) {
             res.json({
-                message: "email does not exit please signup"
+                message: "user not found,create your account"
             })
         }
-        let isPasswordMatch = await bcrypt.compare(password, checkUserExit?.password)
-        console.log(isPasswordMatch)
+        let isPasswordMatch = await bcrypt.compare(password, isUserExist?.password)
+
         if (!isPasswordMatch) {
             return res.json({
                 message: "invalid credentials"
@@ -83,14 +84,15 @@ const login = async (req, res) => {
         }
 
         let sendData = {
-            name: checkUserExit.name,
-            email: checkUserExit.email,
-            _id: checkUserExit._id
+            name: isUserExist.name,
+            email: isUserExist.email,
+            _id: isUserExist._id
         }
 
         //jwt = json web token
-        let token = await jwt.sign(sendData, process.env.JWT_SECRET, { expiresIn: "1h" });
-        res.cookie("token", token);
+        let token = jwt.sign(sendData, process.env.JWT_SECRET, { expiresIn: "7d" });
+        // res.cookie("token", token);
+        res.session.token = token;
 
         res.json({
             message: "login successfully",
@@ -99,6 +101,7 @@ const login = async (req, res) => {
 
     } catch (error) {
         res.json({
+            data: null,
             message: error.message
         })
     }
