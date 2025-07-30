@@ -1,8 +1,6 @@
 import jwt from "jsonwebtoken"
-import user from "../models/user.model.js";
+import User from "../models/user.model.js";
 import bcrypt from "bcrypt"
-import { config } from "dotenv"
-config();
 
 const signup = async (req, res) => {
     try {
@@ -21,6 +19,7 @@ const signup = async (req, res) => {
 
         //if user has been already present then
         let isUserExist = await User.findOne({ email });
+
         if (isUserExist) {
             return res.json({
                 data: null,
@@ -30,6 +29,7 @@ const signup = async (req, res) => {
 
         // if user not already exits then
         let hashPassword = await bcrypt.hash(password, 10);
+
         let createUser = await User.create({
             name,
             email,
@@ -68,14 +68,14 @@ const login = async (req, res) => {
             }
         })
 
-        let isUserExist = await user.findOne({ email })
+        let isUserExist = await User.findOne({ email })
 
         if (!isUserExist) {
             res.json({
                 message: "user not found,create your account"
             })
         }
-        let isPasswordMatch = await bcrypt.compare(password, isUserExist?.password)
+        let isPasswordMatch = bcrypt.compare(password, isUserExist?.password)
 
         if (!isPasswordMatch) {
             return res.json({
@@ -90,9 +90,13 @@ const login = async (req, res) => {
         }
 
         //jwt = json web token
-        let token = jwt.sign(sendData, process.env.JWT_SECRET, { expiresIn: "7d" });
+        let token = jwt.sign(sendData, process.env.JWT_SECRET, {
+            expiresIn: "7d"
+        });
         // res.cookie("token", token);
-        res.session.token = token;
+        req.session.token = token;
+    
+
 
         res.json({
             message: "login successfully",
