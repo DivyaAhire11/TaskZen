@@ -11,7 +11,7 @@ const PORT = 3000 || process.env.PORT
 // Controllers
 import { healthControler } from "./controller/generalController.js"
 import { signup, login } from "./controller/loginSignUpController.js";
-import { addTodo } from "./controller/todoControl.js"; 
+import { addTodo,getTodo,updateTodoSts } from "./controller/todoControl.js"; 
 
 //middleware
 import verifyUser from "./middlewares/verifyUser.js";
@@ -40,6 +40,9 @@ app.post("/signup", signup);
 app.post("/login", login);
 app.get("/health", healthControler);
 app.post("/addTodo/:Userid",addTodo);
+app.get("/getTodo/:Userid",getTodo);
+app.get("/updateTodoSts",updateTodoSts);
+
 
 app.listen(PORT, () => {
     console.log(`Server run on the port is :${PORT}`);
