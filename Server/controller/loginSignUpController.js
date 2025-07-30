@@ -34,7 +34,7 @@ const signup = async (req, res) => {
         let createUser = await User.create({
             name,
             email,
-            Password: hashPassword
+            password: hashPassword
         })
 
         if (createUser) {

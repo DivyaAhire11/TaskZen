@@ -43,8 +43,8 @@ app.use(session({
 
 app.post("/api/signup", signup);
 app.post("/api/login", login);
-app.post("/api/addTodo/", verifyUser, addTodo);
-app.get("/api/getTodo/", verifyUser, getTodo);
+app.post("/api/addTodo/",verifyUser, addTodo);
+app.get("/api/getTodo/",verifyUser, getTodo);
 app.get("/api/updateTodoSts/:todoid", updateTodoSts);
 app.get("/api/health", healthControler);
 

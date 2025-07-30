@@ -79,8 +79,7 @@ const getTodo = async (req, res) => {
 
 const updateTodoSts = async (req, res) => {
     try {
-        // let { todoid } = req.params
-      
+        let { todoid } = req.params
         if (!todoid) {
             return res.json({
                 data: null,
@@ -89,7 +88,7 @@ const updateTodoSts = async (req, res) => {
         }
 
         let findedTodo = await Todos.findById(todoid)
-        findedTodo.status = findedTodo.status === "incomplete" ?  "complete" :  "incomplete"
+        findedTodo.status = findedTodo.status === "incomplete" ? "complete" : "incomplete"
 
         await findedTodo.save()
 
