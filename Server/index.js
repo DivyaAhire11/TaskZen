@@ -1,6 +1,7 @@
 import express from "express"
 import cors from "cors"
 import session from "express-session";
+import cookieParser from "cookie-parser";
 import { config } from "dotenv"
 config()
 
@@ -10,6 +11,7 @@ const PORT = 3000 || process.env.PORT
 // Controllers
 import { healthControler } from "./controller/generalController.js"
 import { signup, login } from "./controller/loginSignUpController.js";
+import { addTodo } from "./controller/todoControl.js"; 
 
 //middleware
 import verifyUser from "./middlewares/verifyUser.js";
@@ -37,7 +39,7 @@ app.use(session({
 app.post("/signup", signup);
 app.post("/login", login);
 app.get("/health", healthControler);
-
+app.post("/addTodo/:Userid",addTodo);
 
 app.listen(PORT, () => {
     console.log(`Server run on the port is :${PORT}`);
