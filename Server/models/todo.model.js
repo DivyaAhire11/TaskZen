@@ -1,29 +1,30 @@
-import { Schema , model } from "mongoose";
+
+import { Schema, model } from "mongoose";
 
 const todoSchema = new Schema({
-    todoTitle:{
-        type:String,
-        required : true
+    todoTitle: {
+        type: String,
+        required: true
     },
-    todoDescription:{
-        type :String
+    todoDescription: {
+        type: String
     },
-    status:{
-        type : String,
-        default : "incomplete",
-        enum:["incomplete","complete"]
+    status: {
+        type: String,
+        default: "incomplete",
+        enum: ["incomplete", "complete"]
     },
-    isPrivate:{
-        type : Boolean,
-        default:true
+    isPrivate: {
+        type: Boolean,
+        default: true
     },
-    user:{
-        type:Schema.Types.ObjectId,
-        ref:"User",
-        required:true
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     }
-},{timestamps:true})
+}, { timestamps: true })
 
-const Todos = model("Todo",todoSchema)
+const Todos = model("Todo", todoSchema)
 
 export default Todos;

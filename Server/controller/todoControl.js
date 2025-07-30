@@ -3,7 +3,8 @@ import User from "../models/user.model.js"
 
 const addTodo = async (req, res) => {
     try {
-        let { Userid } = req.params
+        // let { Userid } = req.params
+        let Userid = req.userId
         let { todoTitle, todoDecription } = req.body
         if (!todoTitle || !todoDecription || !Userid) {
             return res.json({
@@ -46,8 +47,8 @@ const addTodo = async (req, res) => {
 
 const getTodo = async (req, res) => {
     try {
-        let { Userid } = req.params
-
+        // let { Userid } = req.params
+        let Userid = req.userId
         if (!Userid) {
             return res.json({
                 data: null,
@@ -56,7 +57,6 @@ const getTodo = async (req, res) => {
         }
 
         let userData = await Todos.findOne({ user: Userid })
-        console.log(userData);
 
         if (!userData) {
             return res.json({
@@ -79,7 +79,8 @@ const getTodo = async (req, res) => {
 
 const updateTodoSts = async (req, res) => {
     try {
-        let { todoid } = req.params
+        // let { todoid } = req.params
+      
         if (!todoid) {
             return res.json({
                 data: null,
@@ -88,7 +89,7 @@ const updateTodoSts = async (req, res) => {
         }
 
         let findedTodo = await Todos.findById(todoid)
-        findedTodo.status === "incomplete" ? findedTodo.status = "complete" : findedTodo.status = "incomplete"
+        findedTodo.status = findedTodo.status === "incomplete" ?  "complete" :  "incomplete"
 
         await findedTodo.save()
 

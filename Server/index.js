@@ -11,7 +11,7 @@ const PORT = 3000 || process.env.PORT
 // Controllers
 import { healthControler } from "./controller/generalController.js"
 import { signup, login } from "./controller/loginSignUpController.js";
-import { addTodo,getTodo,updateTodoSts } from "./controller/todoControl.js"; 
+import { addTodo, getTodo, updateTodoSts } from "./controller/todoControl.js";
 
 //middleware
 import verifyUser from "./middlewares/verifyUser.js";
@@ -19,12 +19,17 @@ import verifyUser from "./middlewares/verifyUser.js";
 //my Config
 import connectdb from "./config/connectdb.js";
 
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+
+
 app.use(cors({
     origin: ["http://localhost:5173", "*"],
     credentials: true
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
+
+app.use(cookieParser())
 
 app.use(session({
     secret: `${process.env.SESSION_SERECT}`,
@@ -36,12 +41,12 @@ app.use(session({
     }
 }))
 
-app.post("/signup", signup);
-app.post("/login", login);
-app.get("/health", healthControler);
-app.post("/addTodo/:Userid",addTodo);
-app.get("/getTodo/:Userid",getTodo);
-app.get("/updateTodoSts",updateTodoSts);
+app.post("/api/signup", signup);
+app.post("/api/login", login);
+app.post("/api/addTodo/", verifyUser, addTodo);
+app.get("/api/getTodo/", verifyUser, getTodo);
+app.get("/api/updateTodoSts/:todoid", updateTodoSts);
+app.get("/api/health", healthControler);
 
 
 app.listen(PORT, () => {

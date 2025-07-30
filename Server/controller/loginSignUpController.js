@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken"
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt"
 
+
 const signup = async (req, res) => {
     try {
         let { name, email, password } = req.body
@@ -33,7 +34,7 @@ const signup = async (req, res) => {
         let createUser = await User.create({
             name,
             email,
-            password: hashPassword
+            Password: hashPassword
         })
 
         if (createUser) {
@@ -59,14 +60,13 @@ const signup = async (req, res) => {
 const login = async (req, res) => {
     try {
         let { email, password } = req.body
-        let requiredfield = ["email", "password"];
-        requiredfield.forEach((field) => {
-            if (!req.body[field]) {
-                return res.json({
-                    message: `${field} is required to login`
-                })
-            }
-        })
+         
+        if(!email || !password){
+            return res.json({
+                data:null,
+                message:"email and password required"
+            })
+        }
 
         let isUserExist = await User.findOne({ email })
 
@@ -95,7 +95,7 @@ const login = async (req, res) => {
         });
         // res.cookie("token", token);
         req.session.token = token;
-    
+
 
 
         res.json({

@@ -9,6 +9,7 @@ const connectdb = async (req, res) => {
 
     } catch (error) {
         console.log(error)
+        process.exit(1)
     }
 }
 

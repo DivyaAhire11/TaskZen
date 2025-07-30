@@ -5,6 +5,4 @@ const healthControler = (req, res) => {
     })
 }
 
-
-
 export { healthControler }

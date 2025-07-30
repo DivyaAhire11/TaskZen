@@ -13,7 +13,7 @@ const userSchema = new Schema({
         type: String,
         required: true
     }
-},{ timestamps: true })
+}, { timestamps: true })
 
 const User = model("user", userSchema)
 export default User
